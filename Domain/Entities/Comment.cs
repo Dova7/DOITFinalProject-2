@@ -6,18 +6,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ForumProject.Entities
 {
     public class Comment : BaseEntity
-    {        
-        [Required]
-        [MaxLength(10000)]
-        public string Body { get; set; } = null!;
-
-        [Required]
-        [DataType(DataType.Date)]
-        public DateTime PostDate { get; set; } = DateTime.Now;
-
+    {
         [Required]
         [ForeignKey(nameof(IdentityUser))]
         public string UserId { get; set; } = null!;
         public IdentityUser IdentityUser { get; set; } = null!;
+
+        [Required]
+        [ForeignKey(nameof(Topic))]
+        public Guid TopicId { get; set; }
+        public Topic Topic { get; set; } = null!;
     }
 }

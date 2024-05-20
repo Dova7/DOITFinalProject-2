@@ -16,11 +16,7 @@ namespace ForumProject.Entities
         public State State { get; set; } = State.Pending;
 
         [Required]
-        public bool Status { get; set; }
-
-        [Required]
-        [DataType(DataType.Date)]
-        public DateTime CreateDate { get; set; } = DateTime.Now;
+        public bool Status { get; set; }        
 
         [Required]
         [ForeignKey(nameof(IdentityUser))]

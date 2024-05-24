@@ -1,4 +1,8 @@
-﻿using Application.Models.Identity;
+﻿using Application.Contracts.IServices;
+using Application.Contracts;
+using Application.Models.Identity;
+using Application.Service.Implimentations.Services;
+using Application.Service.Implimentations;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -13,7 +17,6 @@ namespace DOITFinalProject_2
     {
         public static void AddDatabaseContext(this WebApplicationBuilder builder) => builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SQLServerLocalConnection")));
         public static void ConfigureJwtOptions(this WebApplicationBuilder builder) => builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("ApiSettings:JwtOptions"));
-
         public static void AddIdentity(this WebApplicationBuilder builder)
         {
             builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
@@ -29,8 +32,6 @@ namespace DOITFinalProject_2
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
         }
-
-
         public static void AddAuthentication(this WebApplicationBuilder builder)
         {
             var secret = builder.Configuration.GetValue<string>("ApiSettings:JwtOptions:Secret");
@@ -57,9 +58,7 @@ namespace DOITFinalProject_2
                 };
             });
         }
-
         public static void AddHttpContextAccessor(this WebApplicationBuilder builder) => builder.Services.AddHttpContextAccessor();
-
         public static void AddControllers(this WebApplicationBuilder builder) => builder.Services.AddControllers();
         public static void AddEndpointsApiExplorer(this WebApplicationBuilder builder) => builder.Services.AddEndpointsApiExplorer();
         public static void AddSwagger(this WebApplicationBuilder builder)
@@ -93,7 +92,6 @@ namespace DOITFinalProject_2
 
             });
         }
-
         public static void AddCors(this WebApplicationBuilder builder)
         {
             builder.Services.AddCors(options =>
@@ -106,6 +104,11 @@ namespace DOITFinalProject_2
                     policy.AllowAnyOrigin();
                 });
             });
+        }
+        public static void AddScopedServices(this WebApplicationBuilder builder)
+        {
+            builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IJwtGenerator, JwtTokenGenerator>();
         }
     }
 }

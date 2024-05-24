@@ -16,6 +16,7 @@ namespace DOITFinalProject_2
             builder.AddEndpointsApiExplorer();
             builder.AddSwagger();
             builder.AddCors();
+            builder.AddScopedServices();
 
             var app = builder.Build();
 

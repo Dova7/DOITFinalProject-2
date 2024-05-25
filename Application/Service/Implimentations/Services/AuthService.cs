@@ -20,7 +20,7 @@ namespace Application.Service.Implimentations.Services
         private readonly IMapper _mapper;
 
         private const string _adminRole = "Admin";
-        private const string _customerRole = "Customer";
+        private const string _userRole = "User";
 
         public AuthService(ApplicationDbContext applicationDbContext, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IJwtGenerator jwtGenerator)
         {
@@ -47,31 +47,18 @@ namespace Application.Service.Implimentations.Services
             var roles = await _userManager.GetRolesAsync(user);
             var token = _jwtTokenGenerator.GenerateToken(user, roles);
 
-            UserDto userDto = new()
-            {
-                Id = user.Id,
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber
-            };
+            UserDto userDto = _mapper.Map<UserDto>(user);
 
             LoginResponseDto result = new()
             {
                 User = userDto,
                 Token = token
             };
-
             return result;
         }
         public async Task Register(RegistrationRequestDto registrationRequestDto)
         {
-            IdentityUser user = new()
-            {
-                UserName = registrationRequestDto.Email,
-                NormalizedUserName = registrationRequestDto.Email.ToUpper(),
-                Email = registrationRequestDto.Email,
-                NormalizedEmail = registrationRequestDto.Email.ToUpper(),
-                PhoneNumber = registrationRequestDto.PhoneNumber
-            };
+            IdentityUser user = _mapper.Map<IdentityUser>(registrationRequestDto);
 
             try
             {
@@ -83,19 +70,14 @@ namespace Application.Service.Implimentations.Services
 
                     if (userToReturn != null)
                     {
-                        if (!await _roleManager.RoleExistsAsync(_customerRole))
+                        if (!await _roleManager.RoleExistsAsync(_userRole))
                         {
-                            await _roleManager.CreateAsync(new IdentityRole(_customerRole));
+                            await _roleManager.CreateAsync(new IdentityRole(_userRole));
                         }
 
-                        await _userManager.AddToRoleAsync(userToReturn, _customerRole);
+                        await _userManager.AddToRoleAsync(userToReturn, _userRole);
 
-                        UserDto userDto = new()
-                        {
-                            Email = userToReturn.Email,
-                            Id = userToReturn.Id,
-                            PhoneNumber = userToReturn.PhoneNumber
-                        };
+                        UserDto userDto = _mapper.Map<UserDto>(userToReturn);
                     }
                 }
                 else
@@ -110,14 +92,7 @@ namespace Application.Service.Implimentations.Services
         }
         public async Task RegisterAdmin(RegistrationRequestDto registrationRequestDto)
         {
-            IdentityUser user = new()
-            {
-                UserName = registrationRequestDto.Email,
-                NormalizedUserName = registrationRequestDto.Email.ToUpper(),
-                Email = registrationRequestDto.Email,
-                NormalizedEmail = registrationRequestDto.Email.ToUpper(),
-                PhoneNumber = registrationRequestDto.PhoneNumber
-            };
+            IdentityUser user = _mapper.Map<IdentityUser>(registrationRequestDto);
 
             try
             {
@@ -136,12 +111,7 @@ namespace Application.Service.Implimentations.Services
 
                         await _userManager.AddToRoleAsync(userToReturn, _adminRole);
 
-                        UserDto userDto = new()
-                        {
-                            Email = userToReturn.Email,
-                            Id = userToReturn.Id,
-                            PhoneNumber = userToReturn.PhoneNumber
-                        };
+                        UserDto userDto = _mapper.Map<UserDto>(userToReturn);
                     }
                 }
                 else

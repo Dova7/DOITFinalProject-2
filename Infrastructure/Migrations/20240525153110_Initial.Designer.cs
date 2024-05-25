@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240520220454_initial")]
-    partial class initial
+    [Migration("20240525153110_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,7 +59,7 @@ namespace Infrastructure.Migrations
                         {
                             Id = new Guid("3de83fe1-7390-4cdf-84ef-c403ac9cce6c"),
                             Body = "lorem donec massa sapien faucibus et molestie ac feugiat sed lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt ornare massa eget egestas purus viverra",
-                            PostDate = new DateTime(2024, 5, 21, 2, 4, 54, 235, DateTimeKind.Local).AddTicks(3354),
+                            PostDate = new DateTime(2024, 5, 25, 19, 31, 9, 507, DateTimeKind.Local).AddTicks(8750),
                             TopicId = new Guid("33b7ed72-9434-434a-82d4-3018b018cb87"),
                             UserId = "CD04B747-A694-4431-8C8A-7CBF278A3832"
                         },
@@ -67,7 +67,7 @@ namespace Infrastructure.Migrations
                         {
                             Id = new Guid("b53a2b67-c7c7-4937-b2ee-275d66dd803e"),
                             Body = "imperdiet sed euismod nisi porta lorem mollis aliquam ut porttitor leo a diam sollicitudin tempor id eu nisl nunc mi ipsum faucibus vitae aliquet nec",
-                            PostDate = new DateTime(2024, 5, 21, 2, 4, 54, 235, DateTimeKind.Local).AddTicks(3359),
+                            PostDate = new DateTime(2024, 5, 25, 19, 31, 9, 507, DateTimeKind.Local).AddTicks(8760),
                             TopicId = new Guid("33b7ed72-9434-434a-82d4-3018b018cb87"),
                             UserId = "230669E4-C593-4084-BACC-E5A1AD1AD494"
                         },
@@ -75,7 +75,7 @@ namespace Infrastructure.Migrations
                         {
                             Id = new Guid("b7d286fe-6ac7-48ed-a29c-dfc475cea0bb"),
                             Body = "egestas erat imperdiet sed euismod nisi porta lorem mollis aliquam ut porttitor leo a diam sollicitudin tempor id eu nisl nunc mi ipsum faucibus vitae",
-                            PostDate = new DateTime(2024, 5, 21, 2, 4, 54, 235, DateTimeKind.Local).AddTicks(3363),
+                            PostDate = new DateTime(2024, 5, 25, 19, 31, 9, 507, DateTimeKind.Local).AddTicks(8767),
                             TopicId = new Guid("0257e1e3-2135-444e-8854-dbc588a7b29b"),
                             UserId = "CD04B747-A694-4431-8C8A-7CBF278A3832"
                         },
@@ -83,7 +83,7 @@ namespace Infrastructure.Migrations
                         {
                             Id = new Guid("fa088c36-d4f7-4dca-82d1-51c18c830c31"),
                             Body = "ac tincidunt vitae semper quis lectus nulla at volutpat diam ut venenatis tellus in metus vulputate",
-                            PostDate = new DateTime(2024, 5, 21, 2, 4, 54, 235, DateTimeKind.Local).AddTicks(3367),
+                            PostDate = new DateTime(2024, 5, 25, 19, 31, 9, 507, DateTimeKind.Local).AddTicks(8773),
                             TopicId = new Guid("e18a5600-0d2a-4d43-b045-f7773c5c2d8d"),
                             UserId = "230669E4-C593-4084-BACC-E5A1AD1AD494"
                         },
@@ -91,7 +91,7 @@ namespace Infrastructure.Migrations
                         {
                             Id = new Guid("5ce3ed72-1029-41a2-a957-e9d61928105f"),
                             Body = "imperdiet sed euismod nisi porta lorem mollis aliquam ut porttitor leo a diam sollicitudin tempor id eu nisl nunc mi ipsum faucibus vitae aliquet nec",
-                            PostDate = new DateTime(2024, 5, 21, 2, 4, 54, 235, DateTimeKind.Local).AddTicks(3370),
+                            PostDate = new DateTime(2024, 5, 25, 19, 31, 9, 507, DateTimeKind.Local).AddTicks(8776),
                             TopicId = new Guid("5b365ad2-0264-46b2-86a8-c9c426ee88dd"),
                             UserId = "230669E4-C593-4084-BACC-E5A1AD1AD494"
                         },
@@ -99,7 +99,7 @@ namespace Infrastructure.Migrations
                         {
                             Id = new Guid("76d4cf19-b62d-4a1d-a9fe-dd1f34009c41"),
                             Body = "imperdiet sed euismod nisi porta lorem mollis aliquam ut porttitor leo a diam sollicitudin tempor id eu nisl nunc mi ipsum faucibus vitae aliquet nec",
-                            PostDate = new DateTime(2024, 5, 21, 2, 4, 54, 235, DateTimeKind.Local).AddTicks(3380),
+                            PostDate = new DateTime(2024, 5, 25, 19, 31, 9, 507, DateTimeKind.Local).AddTicks(8793),
                             TopicId = new Guid("5b365ad2-0264-46b2-86a8-c9c426ee88dd"),
                             UserId = "5CB83547-A7E4-4064-81AF-640D2B9ED831"
                         });
@@ -145,7 +145,7 @@ namespace Infrastructure.Migrations
                         {
                             Id = new Guid("33b7ed72-9434-434a-82d4-3018b018cb87"),
                             Body = "vestibulum sed arcu non odio euismod lacinia at quis risus sed vulputate odio ut enim blandit volutpat maecenas volutpat blandit aliquam etiam erat velit scelerisque in dictum non consectetur a erat nam at lectus urna duis convallis convallis tellus id interdum velit laoreet id donec ultrices tincidunt arcu non sodales neque sodales ut etiam sit amet nisl purus in mollis nunc sed id semper risus in hendrerit gravida rutrum quisque non tellus orci ac auctor augue mauris augue neque gravida in fermentum et sollicitudin ac orci phasellus egestas tellus rutrum tellus pellentesque eu tincidunt tortor aliquam nulla facilisi cras fermentum odio eu feugiat pretium nibh ipsum consequat nisl vel pretium lectus quam id leo in vitae turpis massa sed elementum tempus egestas sed sed risus pretium quam vulputate dignissim suspendisse in est ante in nibh mauris cursus mattis molestie a iaculis at erat pellentesque adipiscing commodo elit at imperdiet dui accumsan sit amet nulla facilisi morbi tempus iaculis urna id volutpat lacus laoreet non curabitur gravida arcu ac tortor dignissim convallis aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus",
-                            PostDate = new DateTime(2024, 5, 21, 2, 4, 54, 235, DateTimeKind.Local).AddTicks(3271),
+                            PostDate = new DateTime(2024, 5, 25, 19, 31, 9, 507, DateTimeKind.Local).AddTicks(8616),
                             State = 1,
                             Status = true,
                             Title = "Cats",
@@ -155,7 +155,7 @@ namespace Infrastructure.Migrations
                         {
                             Id = new Guid("0257e1e3-2135-444e-8854-dbc588a7b29b"),
                             Body = "ullamcorper eget nulla facilisi etiam dignissim diam quis enim lobortis scelerisque fermentum dui faucibus in ornare quam viverra orci sagittis eu volutpat odio facilisis mauris sit amet massa vitae tortor condimentum lacinia quis vel eros donec ac odio tempor orci dapibus ultrices in iaculis nunc sed augue lacus viverra vitae",
-                            PostDate = new DateTime(2024, 5, 21, 2, 4, 54, 235, DateTimeKind.Local).AddTicks(3276),
+                            PostDate = new DateTime(2024, 5, 25, 19, 31, 9, 507, DateTimeKind.Local).AddTicks(8622),
                             State = 1,
                             Status = true,
                             Title = "Dogs",
@@ -165,7 +165,7 @@ namespace Infrastructure.Migrations
                         {
                             Id = new Guid("e18a5600-0d2a-4d43-b045-f7773c5c2d8d"),
                             Body = "dictum varius duis at consectetur lorem donec massa sapien faucibus et molestie ac feugiat sed lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt ornare massa eget egestas purus viverra accumsan in nisl nisi scelerisque eu ultrices vitae auctor eu augue ut lectus arcu bibendum at varius vel pharetra vel turpis nunc eget lorem dolor sed viverra ipsum nunc aliquet bibendum enim facilisis gravida neque convallis a cras semper auctor neque vitae tempus quam pellentesque nec nam aliquam sem et tortor consequat id porta nibh venenatis cras sed felis eget velit aliquet sagittis id consectetur purus ut faucibus pulvinar elementum integer enim neque volutpat ac tincidunt vitae semper quis lectus nulla at volutpat diam ut venenatis tellus in metus vulputate eu scelerisque felis imperdiet proin fermentum leo vel orci porta non pulvinar neque laoreet suspendisse interdum consectetur libero id faucibus nisl tincidunt eget nullam non nisi est sit amet facilisis magna etiam tempor orci eu lobortis elementum nibh tellus molestie nunc non blandit massa enim nec dui nunc mattis enim ut tellus elementum sagittis vitae et leo duis ut diam quam nulla porttitor massa id neque aliquam vestibulum morbi blandit cursus risus at ultrices mi tempus imperdiet nulla malesuada pellentesque elit eget gravida cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus mauris vitae ultricies leo integer malesuada nunc vel risus commodo viverra maecenas accumsan lacus vel facilisis volutpat est velit egestas dui id ornare arcu odio ut sem nulla pharetra diam sit amet nisl suscipit adipiscing bibendum est ultricies integer quis auctor elit sed vulputate mi sit amet mauris commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero nunc consequat interdum varius sit amet mattis vulputate enim nulla aliquet porttitor lacus luctus accumsan tortor posuere ac ut consequat semper viverra nam libero justo laoreet sit amet cursus sit amet dictum sit amet justo donec enim diam vulputate ut pharetra sit amet aliquam id diam maecenas ultricies mi eget mauris pharetra et ultrices neque ornare aenean euismod elementum nisi quis eleifend quam adipiscing vitae proin sagittis nisl rhoncus mattis rhoncus urna neque viverra justo nec ultrices dui sapien eget mi proin sed libero enim sed faucibus turpis in eu mi bibendum neque egestas congue quisque egestas diam in arcu cursus euismod quis viverra nibh cras pulvinar mattis nunc sed blandit libero volutpat sed cras ornare arcu dui vivamus arcu felis bibendum ut tristique et egestas quis ipsum suspendisse ultrices gravida dictum fusce ut placerat orci nulla pellentesque dignissim enim sit amet venenatis urna cursus eget nunc scelerisque viverra mauris in aliquam sem fringilla ut morbi tincidunt augue interdum velit euismod in pellentesque massa placerat duis ultricies lacus sed turpis tincidunt id aliquet risus feugiat in ante metus dictum at tempor commodo ullamcorper a lacus vestibulum sed arcu non odio euismod lacinia at quis risus sed vulputate odio ut enim blandit volutpat maecenas volutpat blandit aliquam etiam erat velit scelerisque in dictum non consectetur a erat nam at lectus urna duis convallis convallis",
-                            PostDate = new DateTime(2024, 5, 21, 2, 4, 54, 235, DateTimeKind.Local).AddTicks(3283),
+                            PostDate = new DateTime(2024, 5, 25, 19, 31, 9, 507, DateTimeKind.Local).AddTicks(8626),
                             State = 1,
                             Status = true,
                             Title = "Snakes",
@@ -175,7 +175,7 @@ namespace Infrastructure.Migrations
                         {
                             Id = new Guid("5b365ad2-0264-46b2-86a8-c9c426ee88dd"),
                             Body = "elementum tempus egestas sed sed risus pretium quam vulputate dignissim suspendisse in est ante in nibh mauris cursus mattis molestie a iaculis at erat pellentesque adipiscing commodo elit at imperdiet dui accumsan sit amet nulla facilisi morbi tempus iaculis urna id volutpat lacus laoreet non curabitur gravida arcu ac tortor dignissim convallis aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis varius quam quisque id diam vel quam elementum pulvinar etiam non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet consectetur adipiscing elit duis tristique sollicitudin nibh sit amet commodo nulla facilisi nullam vehicula ipsum a arcu cursus vitae congue mauris",
-                            PostDate = new DateTime(2024, 5, 21, 2, 4, 54, 235, DateTimeKind.Local).AddTicks(3294),
+                            PostDate = new DateTime(2024, 5, 25, 19, 31, 9, 507, DateTimeKind.Local).AddTicks(8649),
                             State = 1,
                             Status = true,
                             Title = "Hamsters",
@@ -318,16 +318,16 @@ namespace Infrastructure.Migrations
                         {
                             Id = "24614412-A49F-4DC8-BCE1-EE5AFF9B11BC",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ab190609-792d-47a7-a94c-f6b56eb396b9",
+                            ConcurrencyStamp = "d4d53832-1d55-40a7-a99e-9515809b2492",
                             Email = "admin@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = true,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBB56IPfxksVdrtBkg4bUOwCnXcdfLlluio9SRI5f8JpJ42/ZeQYDd7gjdEp1hrlLg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHjBt99xYxYejbg1q4SNJCFr6M0rNpY6xCQcFu6pHKVqTXgvrCsbMqegS4tEZRqa+g==",
                             PhoneNumber = "555337681",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "2cd2b9cd-96f6-4a7b-9cf3-8deb94071dfc",
+                            SecurityStamp = "db9ccdbe-8fa1-406b-b7fa-9d2add811913",
                             TwoFactorEnabled = false,
                             UserName = "admin@gmail.com"
                         },
@@ -335,16 +335,16 @@ namespace Infrastructure.Migrations
                         {
                             Id = "CD04B747-A694-4431-8C8A-7CBF278A3832",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "40948512-18fd-4a5a-8fdb-0a713d227da8",
+                            ConcurrencyStamp = "4ff5324a-dcf1-4cce-b210-cf0e837d326c",
                             Email = "gio@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = true,
                             NormalizedEmail = "GIO@GMAIL.COM",
                             NormalizedUserName = "GIO@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAeEXLTWKTFnN7B73cZLgZOZv6RMeKC9MwGShqtCJeA0Nq23IyyboT+oCwmdu/9yzg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDV++6jZpNRrrAGpvDNbiTlib/VDH2xdZkSif5KMLY/FzJAJB9dNC1NYCD+2D8pbtg==",
                             PhoneNumber = "589745665",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "32d754ce-dc99-440f-b22a-004deb0aae91",
+                            SecurityStamp = "02aa4f25-43af-4996-8190-aa1fe6a63149",
                             TwoFactorEnabled = false,
                             UserName = "gio@gmail.com"
                         },
@@ -352,16 +352,16 @@ namespace Infrastructure.Migrations
                         {
                             Id = "230669E4-C593-4084-BACC-E5A1AD1AD494",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5f9c0cbf-a935-4002-8b9f-dc66641039c5",
+                            ConcurrencyStamp = "13070ba9-5f77-4e55-b9a1-d2a4f1590e77",
                             Email = "nika@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = true,
                             NormalizedEmail = "NIKA@GMAIL.COM",
                             NormalizedUserName = "NIKA@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEArF2Fwo9/RAASGfjHaGo4WTJgdki0+sPvMLjvnD1CMPhvGws5mesGWvLSE0FWwJCA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELhFwJ3jyfJaQQBKVbuaJQ3oqQGL5kTH41eV2Evo7fLoy8uEQz2z/JoLKgcNiVQlbA==",
                             PhoneNumber = "558490645",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "2e4691ae-1778-4822-acfc-9fcd177c3b63",
+                            SecurityStamp = "176d3bc5-8ac9-4b54-8027-d0849965d80a",
                             TwoFactorEnabled = false,
                             UserName = "nika@gmail.com"
                         },
@@ -369,16 +369,16 @@ namespace Infrastructure.Migrations
                         {
                             Id = "1DF10D85-D5F8-4E4E-8892-92B740BF2F4F",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a0eefac9-cc54-49de-b5dc-e26e2fbaec0d",
+                            ConcurrencyStamp = "3fc2aba4-5789-4611-8452-42fee22f8f3b",
                             Email = "saba@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = true,
                             NormalizedEmail = "SABA@GMAIL.COM",
                             NormalizedUserName = "SABA@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFEWtEE4nA3yj8ONT44o+9xVO6qdBc5aVyCmetwBme++ytj63Oxb7UQL9nKxLfKe2w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOdjeEYfDf8cIFD2i0pgSibayhpBC1vPlv/Qhm2but8hLp0F7z2+a5d2iA5df/+YxQ==",
                             PhoneNumber = "5523901029",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f6038fe6-0e0d-4381-8868-0bb4450d23b5",
+                            SecurityStamp = "49b4f565-74e8-4589-ba57-69243448338a",
                             TwoFactorEnabled = false,
                             UserName = "saba@gmail.com"
                         },
@@ -386,16 +386,16 @@ namespace Infrastructure.Migrations
                         {
                             Id = "5CB83547-A7E4-4064-81AF-640D2B9ED831",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6688f883-ef78-493f-adfc-ed72d95e7800",
+                            ConcurrencyStamp = "a85cfdec-a9e8-40d9-947e-4ea3870d3aa3",
                             Email = "beqa@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = true,
                             NormalizedEmail = "BEQA@GMAIL.COM",
                             NormalizedUserName = "BEQA@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIPO+WVDjGxJHUqxebFV1ZlxX9djDVKkQ2M3KWTM4ZigSr68Gfh0P2et5x69Rho+vw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDZD5hEKRJaYtXT8Lm9jmd41z1lgYwZXmN6kqVUCIBEynjXn1hX2baMN9VVIsywZLg==",
                             PhoneNumber = "5233841070",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3be8b228-c11a-4827-bb75-23f1ff5c2e96",
+                            SecurityStamp = "fd9b00d2-9348-4063-8e63-66a734a013e6",
                             TwoFactorEnabled = false,
                             UserName = "beqa@gmail.com"
                         });

@@ -21,7 +21,9 @@ namespace Application.Service.Mapper
                 .ForMember(destination => destination.NormalizedUserName, options => options.MapFrom(source => source.Email.ToUpper()))
                 .ForMember(destination => destination.Email, options => options.MapFrom(source => source.Email))
                 .ForMember(destination => destination.NormalizedEmail, options => options.MapFrom(source => source.Email.ToUpper()))
-                .ForMember(destination => destination.PhoneNumber, options => options.MapFrom(source => source.PhoneNumber));
+                .ForMember(destination => destination.PhoneNumber, options => options.MapFrom(source => source.PhoneNumber))
+                .ReverseMap();
+
             });
             return configuration.CreateMapper();
         }

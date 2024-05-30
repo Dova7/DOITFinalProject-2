@@ -10,6 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using Application.Contracts.IRepositories;
+using Infrastructure.Repository;
 
 namespace DOITFinalProject_2
 {
@@ -109,6 +111,7 @@ namespace DOITFinalProject_2
         {
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IJwtGenerator, JwtTokenGenerator>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
         }
     }
 }

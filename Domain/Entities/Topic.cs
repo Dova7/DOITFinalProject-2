@@ -16,7 +16,7 @@ namespace ForumProject.Entities
         public State State { get; set; } = State.Pending;
 
         [Required]
-        public bool Status { get; set; }        
+        public bool Status { get; set; } = true;       
 
         [Required]
         [ForeignKey(nameof(IdentityUser))]

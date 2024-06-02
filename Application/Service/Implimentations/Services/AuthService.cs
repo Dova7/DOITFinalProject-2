@@ -22,7 +22,7 @@ namespace Application.Service.Implimentations.Services
         {
             _userRepository = userRepository;
             _jwtTokenGenerator = jwtGenerator;
-            _mapper = MappingProfile.Initialize();
+            _mapper = MappingProfile.InitializeAuth();
         }
 
         public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)

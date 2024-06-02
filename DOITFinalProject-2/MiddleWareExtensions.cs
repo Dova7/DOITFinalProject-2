@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using Application.Contracts.IRepositories;
 using Infrastructure.Repository;
+using Infrastructure.Repositories;
 
 namespace DOITFinalProject_2
 {
@@ -112,6 +113,10 @@ namespace DOITFinalProject_2
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IJwtGenerator, JwtTokenGenerator>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+            builder.Services.AddScoped<ITopicRepository, TopicRepository>();
+            builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+            builder.Services.AddScoped<ITopicService, TopicService>();
         }
     }
 }

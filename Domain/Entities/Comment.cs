@@ -16,5 +16,7 @@ namespace ForumProject.Entities
         [ForeignKey(nameof(Topic))]
         public Guid TopicId { get; set; }
         public Topic Topic { get; set; } = null!;
+
+
     }
 }

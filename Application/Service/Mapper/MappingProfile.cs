@@ -3,15 +3,18 @@ using Application.Models.Main.Dtos.Comment;
 using Application.Models.Main.Dtos.Topic;
 using AutoMapper;
 using ForumProject.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
 namespace Application.Service.Mapper
 {
     public class MappingProfile
     {
-        public MappingProfile()
-        {
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
+        public MappingProfile(IHttpContextAccessor httpContextAccessor)
+        {
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public static IMapper InitializeAuth()
@@ -30,7 +33,7 @@ namespace Application.Service.Mapper
             return configuration.CreateMapper();
         }
 
-        public static IMapper InitializeTopic()
+        public IMapper InitializeTopic()
         {
             MapperConfiguration configuration = new(config =>
             {
@@ -48,6 +51,21 @@ namespace Application.Service.Mapper
                 .ForMember(d => d.Status, o => o.MapFrom(s => s.Status))
                 .ForMember(d => d.UserName, o => o.MapFrom(s => s.IdentityUser.UserName))
                 .ForMember(d => d.Comments, o => o.MapFrom(s => s.Comments))
+                .ReverseMap();
+
+                config.CreateMap<Topic, TopicForCreatingDto>()
+                .ForMember(d => d.Title, o => o.MapFrom(s => s.Title))
+                .ForMember(d => d.Body, o => o.MapFrom(s => s.Body))
+                .ReverseMap();
+
+                config.CreateMap<Topic, TopicForUpdatingDtoUser>()
+                .ForMember(d => d.Title, o => o.MapFrom(s => s.Title))
+                .ForMember(d => d.Body, o => o.MapFrom(s => s.Body))
+                .ForMember(d => d.Status, o => o.MapFrom(s => s.Status))
+                .ReverseMap();
+
+                config.CreateMap<Topic, TopicForUpdatingDtoAdmin>()
+                .ForMember(d => d.State, o => o.MapFrom(s => s.State))
                 .ReverseMap();
             });
             return configuration.CreateMapper();

@@ -1,6 +1,10 @@
 ﻿using Application.Contracts.IServices;
 using Application.Models.Main.Dtos.Topic;
+using Azure;
 using DOITFinalProject_2.Responses;
+using ForumProject.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -45,6 +49,48 @@ namespace DOITFinalProject_2.Controllers
             _response.IsSuccess = true;
             _response.StatusCode = Convert.ToInt32(HttpStatusCode.OK);
             _response.Message = "Request completed successfully";
+
+            return StatusCode(_response.StatusCode, _response);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> AddTopic([FromBody] TopicForCreatingDto topicForCreatingDto)
+        {
+            await _topicService.CreateTopicAsync(topicForCreatingDto);
+
+            _response.Result = topicForCreatingDto;
+            _response.IsSuccess = true;
+            _response.StatusCode = Convert.ToInt32(HttpStatusCode.OK);
+            _response.Message = "Request completed successfully";
+
+            return StatusCode(_response.StatusCode, _response);
+        }
+
+        [HttpPatch("{topicId:guid}/user")]
+        [Authorize]
+        public async Task<IActionResult> UpdateTopicUser([FromRoute] Guid topicId, [FromBody] JsonPatchDocument<TopicForUpdatingDtoUser> patchDocument) 
+        {
+            await _topicService.UpdateTopicAsyncUser(topicId, patchDocument);
+
+            _response.Result = patchDocument;
+            _response.IsSuccess = true;
+            _response.StatusCode = Convert.ToInt32(HttpStatusCode.OK);
+            _response.Message = "Todo updated successfully";
+
+            return StatusCode(_response.StatusCode, _response);
+        }
+
+        [HttpPatch("{topicId:guid}/admin")]
+        [Authorize]
+        public async Task<IActionResult> UpdateTopicAdmin([FromRoute] Guid topicId, [FromBody] JsonPatchDocument<TopicForUpdatingDtoAdmin> patchDocument)
+        {
+            await _topicService.UpdateTopicAsyncAdmin(topicId, patchDocument);
+
+            _response.Result = patchDocument;
+            _response.IsSuccess = true;
+            _response.StatusCode = Convert.ToInt32(HttpStatusCode.OK);
+            _response.Message = "Todo updated successfully";
 
             return StatusCode(_response.StatusCode, _response);
         }

@@ -13,6 +13,7 @@ using System.Text;
 using Application.Contracts.IRepositories;
 using Infrastructure.Repository;
 using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DOITFinalProject_2
 {
@@ -62,7 +63,11 @@ namespace DOITFinalProject_2
             });
         }
         public static void AddHttpContextAccessor(this WebApplicationBuilder builder) => builder.Services.AddHttpContextAccessor();
-        public static void AddControllers(this WebApplicationBuilder builder) => builder.Services.AddControllers();
+        public static void AddControllers(this WebApplicationBuilder builder) => builder.Services.AddControllers(options =>
+        {
+            options.ReturnHttpNotAcceptable = true;
+            options.Filters.Add(new ProducesAttribute("application/json", "text/plain"));
+        }).AddNewtonsoftJson();
         public static void AddEndpointsApiExplorer(this WebApplicationBuilder builder) => builder.Services.AddEndpointsApiExplorer();
         public static void AddSwagger(this WebApplicationBuilder builder)
         {
@@ -110,6 +115,7 @@ namespace DOITFinalProject_2
         }
         public static void AddScopedServices(this WebApplicationBuilder builder)
         {
+            builder.Services.AddScoped<Application.Service.Mapper.MappingProfile>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IJwtGenerator, JwtTokenGenerator>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();

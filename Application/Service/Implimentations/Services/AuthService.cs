@@ -5,6 +5,7 @@ using Application.Models.Identity.Dtos;
 using Application.Service.Exceptions;
 using Application.Service.Mapper;
 using AutoMapper;
+using Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 
 namespace Application.Service.Implimentations.Services
@@ -54,7 +55,7 @@ namespace Application.Service.Implimentations.Services
 
         public async Task Register(RegistrationRequestDto registrationRequestDto)
         {
-            IdentityUser user = _mapper.Map<IdentityUser>(registrationRequestDto);
+            ApplicationUser user = _mapper.Map<ApplicationUser>(registrationRequestDto);
 
             try
             {
@@ -87,7 +88,7 @@ namespace Application.Service.Implimentations.Services
 
         public async Task RegisterAdmin(RegistrationRequestDto registrationRequestDto)
         {
-            IdentityUser user = _mapper.Map<IdentityUser>(registrationRequestDto);
+            ApplicationUser user = _mapper.Map<ApplicationUser>(registrationRequestDto);
 
             try
             {

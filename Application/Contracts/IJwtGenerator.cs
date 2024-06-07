@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Domain.Entities.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace Application.Contracts
 {
     public interface IJwtGenerator
     {
-        string GenerateToken(IdentityUser applicationUser, IEnumerable<string> roles);
+        string GenerateToken(ApplicationUser applicationUser, IEnumerable<string> roles);
     }
 }

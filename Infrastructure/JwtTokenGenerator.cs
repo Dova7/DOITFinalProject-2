@@ -1,6 +1,6 @@
 ﻿using Application.Contracts;
 using Application.Models.Identity;
-using Microsoft.AspNetCore.Identity;
+using Domain.Entities.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Application.Service.Implimentations
 {
-    public class JwtTokenGenerator :IJwtGenerator
+    public class JwtTokenGenerator : IJwtGenerator
     {
         private readonly JwtOptions _jwtOptions;
         public JwtTokenGenerator(IOptions<JwtOptions> jwtOptions)
@@ -17,7 +17,7 @@ namespace Application.Service.Implimentations
             _jwtOptions = jwtOptions.Value;
         }
 
-        public string GenerateToken(IdentityUser applicationUser, IEnumerable<string> roles)
+        public string GenerateToken(ApplicationUser applicationUser, IEnumerable<string> roles)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);

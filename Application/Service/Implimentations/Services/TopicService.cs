@@ -42,7 +42,7 @@ namespace Application.Service.Implimentations.Services
 
         public async Task<List<TopicForGettingDto>> GetAllTopicsAsync()
         {
-            var raw = await _topicRepository.GetAllAsync(includePropeties: "Comments,IdentityUser");
+            var raw = await _topicRepository.GetAllAsync(includePropeties: "Comments,ApplicationUser");
             if (raw.Count == 0)
             {
                 throw new ArgumentNullException("Topics not found");
@@ -58,7 +58,7 @@ namespace Application.Service.Implimentations.Services
                 throw new ArgumentException("Invalid argument passed");
             }
 
-            var raw = await _topicRepository.GetAllAsync(x => x.UserId.Trim() == userId.Trim(), includePropeties: "Comments,IdentityUser");
+            var raw = await _topicRepository.GetAllAsync(x => x.UserId.Trim() == userId.Trim(), includePropeties: "Comments,ApplicationUser");
             if (raw.Count == 0)
             {
                 throw new ArgumentNullException("Topics not found");

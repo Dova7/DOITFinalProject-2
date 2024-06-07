@@ -14,6 +14,7 @@ using Application.Contracts.IRepositories;
 using Infrastructure.Repository;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Domain.Entities.Identity;
 
 namespace DOITFinalProject_2
 {
@@ -23,7 +24,7 @@ namespace DOITFinalProject_2
         public static void ConfigureJwtOptions(this WebApplicationBuilder builder) => builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("ApiSettings:JwtOptions"));
         public static void AddIdentity(this WebApplicationBuilder builder)
         {
-            builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 3;
                 options.Password.RequireNonAlphanumeric = true;

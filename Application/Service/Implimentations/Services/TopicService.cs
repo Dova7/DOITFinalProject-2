@@ -4,23 +4,23 @@ using Application.Models.Main.Dtos.Topic;
 using Application.Service.Mapper;
 using AutoMapper;
 using ForumProject.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
-using System.Security.Claims;
 
 namespace Application.Service.Implimentations.Services
 {
     public class TopicService : ITopicService
     {
         private readonly ITopicRepository _topicRepository;
+        private readonly ICommentRepository _commentRepository;
         private readonly IMapper _mapper;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUserRepository _userRepository;
 
-        public TopicService(ITopicRepository topicRepository, IHttpContextAccessor httpContextAccessor, MappingProfile mappingProfile)
+        public TopicService(ITopicRepository topicRepository, MappingProfile mappingProfile, ICommentRepository commentRepository, IUserRepository userRepository)
         {
-            _httpContextAccessor = httpContextAccessor;
             _topicRepository = topicRepository;
             _mapper = mappingProfile.InitializeTopic();
+            _commentRepository = commentRepository;
+            _userRepository = userRepository;
         }
 
         public async Task CreateTopicAsync(TopicForCreatingDto topicForCreatingDto)
@@ -28,9 +28,9 @@ namespace Application.Service.Implimentations.Services
             if (topicForCreatingDto is null)
             {
                 throw new ArgumentNullException("Invalid argument passed");
-            }            
+            }
             var result = _mapper.Map<Topic>(topicForCreatingDto);
-            var userId = AuthenticatedUserId();
+            var userId = _userRepository.AuthenticatedUserId();
             if (userId is null)
             {
                 throw new UnauthorizedAccessException("Must be logged in to create topic");
@@ -38,6 +38,38 @@ namespace Application.Service.Implimentations.Services
             result.UserId = userId;
             await _topicRepository.AddAsync(result);
             await _topicRepository.Save();
+        }
+
+        public async Task DeleteTopicAsync(Guid id)
+        {
+            if (id == Guid.Empty)
+            {
+                throw new ArgumentException("Invalid argument passed");
+            }
+            var raw = await _topicRepository.GetAsync(x => x.Id == id, includePropeties: "Comments");
+            if (raw == null)
+            {
+                throw new ArgumentNullException("Topic does not exist");
+            }
+            var userId = _userRepository.AuthenticatedUserId();
+            if (userId is null)
+            {
+                throw new UnauthorizedAccessException("Must be logged in to update state of topic");
+            }
+            if (raw.UserId.Trim() != userId && _userRepository.AuthenticatedUserRole().Trim() != "Admin")
+            {
+                throw new UnauthorizedAccessException("Can't delete different users topic");
+            }
+            else
+            {
+                if (raw.Comments != null)
+                {
+                    _commentRepository.RemoveRange(raw.Comments);
+                    await _commentRepository.Save();
+                }
+                _topicRepository.Remove(raw);
+                await _topicRepository.Save();
+            }
         }
 
         public async Task<List<TopicForGettingDto>> GetAllTopicsAsync()
@@ -73,12 +105,12 @@ namespace Application.Service.Implimentations.Services
             {
                 throw new ArgumentNullException("Invalid argument passed");
             }
-            var userId = AuthenticatedUserId();
+            var userId = _userRepository.AuthenticatedUserId();
             if (userId is null)
             {
                 throw new UnauthorizedAccessException("Must be logged in to update state of topic");
             }
-            var userRole = AuthenticatedUserRole();
+            var userRole = _userRepository.AuthenticatedUserRole();
             if (userRole != "Admin".Trim())
             {
                 throw new UnauthorizedAccessException("Must be an admin to update state of topic");
@@ -101,7 +133,7 @@ namespace Application.Service.Implimentations.Services
             {
                 throw new ArgumentNullException("Invalid argument passed");
             }
-            var userId = AuthenticatedUserId();
+            var userId = _userRepository.AuthenticatedUserId();
             if (userId is null)
             {
                 throw new UnauthorizedAccessException("Must be logged in to update topic");
@@ -118,41 +150,8 @@ namespace Application.Service.Implimentations.Services
             var topicToPatch = _mapper.Map<TopicForUpdatingDtoUser>(topicFromDb);
             patchDocument.ApplyTo(topicToPatch);
             _mapper.Map(topicToPatch, topicFromDb);
-            
+
             await _topicRepository.Save();
         }
-        private string AuthenticatedUserId()
-        {
-            if (_httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated ?? false)
-            {
-                var result = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (result == null)
-                {
-                    throw new ArgumentNullException(nameof(result));
-                }
-                return result;
-            }
-            else
-            {
-                throw new UnauthorizedAccessException("Can't get credentials of unauthorized user");
-            }
-        }
-        private string AuthenticatedUserRole()
-        {
-            if (_httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated ?? false)
-            {
-                var result = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Role);
-                if (result == null)
-                {
-                    throw new ArgumentNullException(nameof(result));
-                }
-                return result;
-            }
-            else
-            {
-                throw new UnauthorizedAccessException("Can't get credentials of unauthorized user");
-            }
-        }
-
     }
 }

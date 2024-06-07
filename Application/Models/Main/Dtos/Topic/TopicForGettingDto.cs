@@ -10,6 +10,6 @@ namespace Application.Models.Main.Dtos.Topic
         public DateTime PostDate { get; set; }
         public bool Status { get; set; }
         public string UserName { get; set; } = null!;
-        public ICollection<CommentForGettingDto>? Comments { get; set; }
+        public ICollection<CommentForGettingDtoTopic>? Comments { get; set; }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using Application.Contracts.IServices;
 using Application.Models.Main.Dtos.Topic;
-using Azure;
 using DOITFinalProject_2.Responses;
-using ForumProject.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -38,6 +36,7 @@ namespace DOITFinalProject_2.Controllers
         }
 
         [HttpGet("{userId:guid}")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -55,6 +54,9 @@ namespace DOITFinalProject_2.Controllers
 
         [HttpPost]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> AddTopic([FromBody] TopicForCreatingDto topicForCreatingDto)
         {
             await _topicService.CreateTopicAsync(topicForCreatingDto);
@@ -69,20 +71,26 @@ namespace DOITFinalProject_2.Controllers
 
         [HttpPatch("{topicId:guid}/user")]
         [Authorize]
-        public async Task<IActionResult> UpdateTopicUser([FromRoute] Guid topicId, [FromBody] JsonPatchDocument<TopicForUpdatingDtoUser> patchDocument) 
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpdateTopicUser([FromRoute] Guid topicId, [FromBody] JsonPatchDocument<TopicForUpdatingDtoUser> patchDocument)
         {
             await _topicService.UpdateTopicAsyncUser(topicId, patchDocument);
 
             _response.Result = patchDocument;
             _response.IsSuccess = true;
             _response.StatusCode = Convert.ToInt32(HttpStatusCode.OK);
-            _response.Message = "Todo updated successfully";
+            _response.Message = "Topic updated successfully";
 
             return StatusCode(_response.StatusCode, _response);
         }
 
         [HttpPatch("{topicId:guid}/admin")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdateTopicAdmin([FromRoute] Guid topicId, [FromBody] JsonPatchDocument<TopicForUpdatingDtoAdmin> patchDocument)
         {
             await _topicService.UpdateTopicAsyncAdmin(topicId, patchDocument);
@@ -90,7 +98,24 @@ namespace DOITFinalProject_2.Controllers
             _response.Result = patchDocument;
             _response.IsSuccess = true;
             _response.StatusCode = Convert.ToInt32(HttpStatusCode.OK);
-            _response.Message = "Todo updated successfully";
+            _response.Message = "Topic updated successfully";
+
+            return StatusCode(_response.StatusCode, _response);
+        }
+
+        [HttpDelete("{topicId:guid}")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> DeleteTopic([FromRoute] Guid topicId)
+        {
+            await _topicService.DeleteTopicAsync(topicId);
+
+            _response.Result = topicId;
+            _response.IsSuccess = true;
+            _response.StatusCode = Convert.ToInt32(HttpStatusCode.OK);
+            _response.Message = "Request completed successfully";
 
             return StatusCode(_response.StatusCode, _response);
         }

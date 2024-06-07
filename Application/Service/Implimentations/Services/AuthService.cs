@@ -6,7 +6,6 @@ using Application.Service.Exceptions;
 using Application.Service.Mapper;
 using AutoMapper;
 using Domain.Entities.Identity;
-using Microsoft.AspNetCore.Identity;
 
 namespace Application.Service.Implimentations.Services
 {
@@ -33,13 +32,9 @@ namespace Application.Service.Implimentations.Services
 
             if (user == null || isValid == false)
             {
-                return new LoginResponseDto()
-                {
-                    Token = string.Empty,
-                    User = null
-                };
+                throw new Exception("Invalid username or password");
             }
-
+            
             var roles = await _userRepository.GetRolesAsync(user);
             var token = _jwtTokenGenerator.GenerateToken(user, roles);
 

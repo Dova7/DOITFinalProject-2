@@ -124,6 +124,7 @@ namespace DOITFinalProject_2
             builder.Services.AddScoped<ITopicRepository, TopicRepository>();
             builder.Services.AddScoped<ICommentRepository, CommentRepository>();
             builder.Services.AddScoped<ITopicService, TopicService>();
+            builder.Services.AddScoped<ICommentService, CommentService>();
         }
     }
 }

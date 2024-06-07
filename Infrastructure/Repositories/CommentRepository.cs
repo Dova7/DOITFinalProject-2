@@ -32,5 +32,10 @@ namespace Infrastructure.Repositories
             _context.Comments.Update(entity);
             return entityFromDb;
         }
+        public void RemoveRange(IEnumerable<Comment> entities)
+        {
+            _context.Set<Comment>().RemoveRange(entities);
+        }
+
     }
 }

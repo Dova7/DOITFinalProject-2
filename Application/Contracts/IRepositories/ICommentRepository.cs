@@ -5,6 +5,6 @@ namespace Application.Contracts.IRepositories
 {
     public interface ICommentRepository : IBaseRepository<Comment>, IFullyUpdatable<Comment>, ISavable
     {
-
+        public void RemoveRange(IEnumerable<Comment> entities);
     }
 }

@@ -49,7 +49,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
 
                     b.HasData(
                         new
@@ -135,7 +135,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Topics");
+                    b.ToTable("Topics", (string)null);
 
                     b.HasData(
                         new

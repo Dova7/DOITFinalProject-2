@@ -37,7 +37,7 @@ namespace Application.Service.Mapper
         {
             MapperConfiguration configuration = new(config =>
             {
-                config.CreateMap<Comment, CommentForGettingDto>()
+                config.CreateMap<Comment, CommentForGettingDtoTopic>()
                 .ForMember(d => d.Body, o => o.MapFrom(s => s.Body))
                 .ForMember(d => d.PostDate, o => o.MapFrom(s => s.PostDate))
                 .ForMember(d => d.UserName, o => o.MapFrom(s => s.ApplicationUser.UserName))
@@ -66,6 +66,27 @@ namespace Application.Service.Mapper
 
                 config.CreateMap<Topic, TopicForUpdatingDtoAdmin>()
                 .ForMember(d => d.State, o => o.MapFrom(s => s.State))
+                .ReverseMap();
+            });
+            return configuration.CreateMapper();
+        }
+        public IMapper InitializeComment()
+        {
+            MapperConfiguration configuration = new(config =>
+            {
+                config.CreateMap<Comment, CommentForGettingDtoMain>()
+                .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
+                .ForMember(d => d.PostDate, o => o.MapFrom(s => s.PostDate))
+                .ForMember(d => d.Body, o => o.MapFrom(s => s.Body))
+                .ForMember(d => d.TopicTitle, o => o.MapFrom(s => s.Topic.Title))
+                .ReverseMap();
+
+                config.CreateMap<Comment, CommentForCreatingDto>()                
+                .ForMember(d => d.Body, o => o.MapFrom(s => s.Body))                
+                .ReverseMap();
+
+                config.CreateMap<Comment, CommentForUpdatingDto>()
+                .ForMember(d => d.Body, o => o.MapFrom(s => s.Body))
                 .ReverseMap();
             });
             return configuration.CreateMapper();

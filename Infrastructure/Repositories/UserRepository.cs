@@ -22,7 +22,14 @@ namespace Infrastructure.Repository
         public async Task<ApplicationUser> GetUserAsync(string userName)
         {
             var user = await _userManager.FindByNameAsync(userName);
-            return user;
+            if (user != null)
+            {
+                return user;
+            }
+            else
+            {
+                throw new ArgumentNullException("Unable to find user");
+            }
         }
 
         public async Task<bool> CheckPasswordAsync(ApplicationUser user, string password)

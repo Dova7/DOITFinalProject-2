@@ -22,7 +22,7 @@ namespace Application.Service.Implimentations.Services
         {
             _userRepository = userRepository;
             _jwtTokenGenerator = jwtGenerator;
-            _mapper = MappingProfile.InitializeAuth();
+            _mapper = MappingProfile.InitializeUser();
         }
 
         public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
@@ -38,7 +38,7 @@ namespace Application.Service.Implimentations.Services
             var roles = await _userRepository.GetRolesAsync(user);
             var token = _jwtTokenGenerator.GenerateToken(user, roles);
 
-            UserDto userDto = _mapper.Map<UserDto>(user);
+            var userDto = _mapper.Map<UserForGettingDto>(user);
 
             LoginResponseDto result = new()
             {
@@ -58,7 +58,7 @@ namespace Application.Service.Implimentations.Services
 
                 if (result.Succeeded)
                 {
-                    var userToReturn = await _userRepository.GetUserAsync(registrationRequestDto.Email.ToLower());
+                    var userToReturn = await _userRepository.GetUserAsync(registrationRequestDto.UserName.ToLower());
 
                     if (userToReturn != null)
                     {
@@ -67,12 +67,20 @@ namespace Application.Service.Implimentations.Services
                             await _userRepository.AddToRoleAsync(userToReturn, _userRole);
                         }
 
-                        UserDto userDto = _mapper.Map<UserDto>(userToReturn);
+                        var userDto = _mapper.Map<UserForGettingDto>(userToReturn);
                     }
                 }
                 else
                 {
-                    throw new RegistrationFailure(result.Errors.FirstOrDefault().Description);
+                    var error = result.Errors.FirstOrDefault();
+                    if (error != null)
+                    {
+                        throw new RegistrationFailure(error.Description);
+                    }
+                    else
+                    {
+                        throw new RegistrationFailure("An unknown error occurred.");
+                    }
                 }
             }
             catch (Exception ex)
@@ -91,7 +99,7 @@ namespace Application.Service.Implimentations.Services
 
                 if (result.Succeeded)
                 {
-                    var userToReturn = await _userRepository.GetUserAsync(registrationRequestDto.Email.ToLower());
+                    var userToReturn = await _userRepository.GetUserAsync(registrationRequestDto.UserName.ToLower());
 
                     if (userToReturn != null)
                     {
@@ -100,13 +108,22 @@ namespace Application.Service.Implimentations.Services
                             await _userRepository.AddToRoleAsync(userToReturn, _adminRole);
                         }
 
-                        UserDto userDto = _mapper.Map<UserDto>(userToReturn);
+                        var userDto = _mapper.Map<UserForGettingDto>(userToReturn);
                     }
                 }
                 else
                 {
-                    throw new RegistrationFailure(result.Errors.FirstOrDefault().Description);
+                    var error = result.Errors.FirstOrDefault();
+                    if (error != null)
+                    {
+                        throw new RegistrationFailure(error.Description);
+                    }
+                    else
+                    {
+                        throw new RegistrationFailure("An unknown error occurred.");
+                    }
                 }
+
             }
             catch (Exception ex)
             {

@@ -121,7 +121,8 @@ namespace Infrastructure.Data
                     new ApplicationUser()
                     {
                         Id = "24614412-A49F-4DC8-BCE1-EE5AFF9B11BC",
-                        UserName = "admin@gmail.com",
+                        DisplayName = "admin",                        
+                        UserName = "admin",
                         NormalizedUserName = "ADMIN@GMAIL.COM",
                         Email = "admin@gmail.com",
                         NormalizedEmail = "ADMIN@GMAIL.COM",
@@ -137,7 +138,8 @@ namespace Infrastructure.Data
                     new ApplicationUser()
                     {
                         Id = "CD04B747-A694-4431-8C8A-7CBF278A3832",
-                        UserName = "gio@gmail.com",
+                        UserName = "giorgi",
+                        DisplayName = "gio",
                         NormalizedUserName = "GIO@GMAIL.COM",
                         Email = "gio@gmail.com",
                         NormalizedEmail = "GIO@GMAIL.COM",
@@ -153,7 +155,8 @@ namespace Infrastructure.Data
                     new ApplicationUser()
                     {
                         Id = "230669E4-C593-4084-BACC-E5A1AD1AD494",
-                        UserName = "nika@gmail.com",
+                        UserName = "nikanika",
+                        DisplayName = "nika",
                         NormalizedUserName = "NIKA@GMAIL.COM",
                         Email = "nika@gmail.com",
                         NormalizedEmail = "NIKA@GMAIL.COM",
@@ -169,7 +172,8 @@ namespace Infrastructure.Data
                     new ApplicationUser()
                     {
                         Id = "1DF10D85-D5F8-4E4E-8892-92B740BF2F4F",
-                        UserName = "saba@gmail.com",
+                        UserName = "saba",
+                        DisplayName = "sabasaba",
                         NormalizedUserName = "SABA@GMAIL.COM",
                         Email = "saba@gmail.com",
                         NormalizedEmail = "SABA@GMAIL.COM",
@@ -185,7 +189,8 @@ namespace Infrastructure.Data
                     new ApplicationUser()
                     {
                         Id = "5CB83547-A7E4-4064-81AF-640D2B9ED831",
-                        UserName = "beqa@gmail.com",
+                        UserName = "beqa",
+                        DisplayName = "beqabeqa",
                         NormalizedUserName = "BEQA@GMAIL.COM",
                         Email = "beqa@gmail.com",
                         NormalizedEmail = "BEQA@GMAIL.COM",

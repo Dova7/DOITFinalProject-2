@@ -10,20 +10,20 @@ namespace Application.Service.Mapper
 {
     public class MappingProfile
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public MappingProfile(IHttpContextAccessor httpContextAccessor)
+        public MappingProfile()
         {
-            _httpContextAccessor = httpContextAccessor;
+            
         }
 
-        public static IMapper InitializeAuth()
+        public static IMapper InitializeUser()
         {
             MapperConfiguration configuration = new(config =>
             {
-                config.CreateMap<UserDto, ApplicationUser>().ReverseMap();
+                config.CreateMap<UserForGettingDto, ApplicationUser>().ReverseMap();
+                config.CreateMap<UserForUpdatingDto, ApplicationUser>().ReverseMap();
                 config.CreateMap<RegistrationRequestDto, ApplicationUser>()
-                .ForMember(destination => destination.UserName, options => options.MapFrom(source => source.Email))
+                .ForMember(destination => destination.DisplayName, options => options.MapFrom(source => source.DisplayName))
+                .ForMember(destination => destination.UserName, options => options.MapFrom(source => source.UserName))
                 .ForMember(destination => destination.NormalizedUserName, options => options.MapFrom(source => source.Email.ToUpper()))
                 .ForMember(destination => destination.Email, options => options.MapFrom(source => source.Email))
                 .ForMember(destination => destination.NormalizedEmail, options => options.MapFrom(source => source.Email.ToUpper()))

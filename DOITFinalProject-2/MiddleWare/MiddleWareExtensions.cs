@@ -15,8 +15,10 @@ using Infrastructure.Repository;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Domain.Entities.Identity;
+using DOITFinalProject_2.MiddleWare;
+using DOITFinalProject_2.Filters;
 
-namespace DOITFinalProject_2
+namespace DOITFinalProject_2.MiddleWare
 {
     public static class MiddleWareExtensions
     {
@@ -68,6 +70,7 @@ namespace DOITFinalProject_2
         {
             options.ReturnHttpNotAcceptable = true;
             options.Filters.Add(new ProducesAttribute("application/json", "text/plain"));
+            options.Filters.Add(new LockOutFilter());
         }).AddNewtonsoftJson();
         public static void AddEndpointsApiExplorer(this WebApplicationBuilder builder) => builder.Services.AddEndpointsApiExplorer();
         public static void AddSwagger(this WebApplicationBuilder builder)
@@ -125,6 +128,7 @@ namespace DOITFinalProject_2
             builder.Services.AddScoped<ICommentRepository, CommentRepository>();
             builder.Services.AddScoped<ITopicService, TopicService>();
             builder.Services.AddScoped<ICommentService, CommentService>();
+            builder.Services.AddScoped<IUserService, UserService>();   
         }
     }
 }

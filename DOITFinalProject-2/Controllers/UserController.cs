@@ -1,34 +1,32 @@
 ﻿using Application.Contracts.IServices;
-using Application.Models.Main.Dtos.Comment;
+using Application.Models.Identity.Dtos;
 using Application.Models.Main.Dtos.Topic;
-using Application.Service.Implimentations.Services;
 using DOITFinalProject_2.Responses;
-using ForumProject.Entities;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 namespace DOITFinalProject_2.Controllers
 {
+    [Route("api/users")]
     [ApiController]
-    public class CommentController : ControllerBase
+    public class UserController : ControllerBase
     {
-        private readonly ICommentService _commentService;
+        private readonly IUserService _userService;
         private APIResponse _response;
-        public CommentController(ICommentService commentService)
+        public UserController(IUserService userService)
         {
-            _commentService = commentService;
+            _userService = userService;
             _response = new();
         }
-        [HttpGet("{userId:guid}")]
+
+        [HttpGet]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<CommentForGettingDtoMain>>> GetAllCommentsOfUser([FromRoute] string userId)
+        public async Task<ActionResult<List<TopicForGettingDto>>> GetAllTopics()
         {
-            var result = await _commentService.GetAllCommentsOfUserAsync(userId);
+            var result = await _userService.GetAllUsersAsync();
 
             _response.Result = result;
             _response.IsSuccess = true;
@@ -38,16 +36,16 @@ namespace DOITFinalProject_2.Controllers
             return StatusCode(_response.StatusCode, _response);
         }
 
-        [HttpPost("{topicId:guid}")]
+        [HttpGet("/FindUser")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> AddComment([FromRoute] Guid topicId, [FromBody] CommentForCreatingDto commentForCreatingDto)
+        public async Task<ActionResult<List<TopicForGettingDto>>> GetSingleUserByEmail([FromQuery] string email)
         {
-            await _commentService.CreateCommentAsync(topicId,commentForCreatingDto);
+            var result = await _userService.GetUserAsync(email);
 
-            _response.Result = commentForCreatingDto;
+            _response.Result = result;
             _response.IsSuccess = true;
             _response.StatusCode = Convert.ToInt32(HttpStatusCode.OK);
             _response.Message = "Request completed successfully";
@@ -55,33 +53,49 @@ namespace DOITFinalProject_2.Controllers
             return StatusCode(_response.StatusCode, _response);
         }
 
-        [HttpPatch("{commentId:guid}")]
+        [HttpPatch("{userId:guid}/ban")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> UpdateComment([FromRoute] Guid commentId, [FromBody] JsonPatchDocument<CommentForUpdatingDto> patchDocument)
+        public async Task<IActionResult> BanUser([FromRoute] string userId)
         {
-            await _commentService.UpdateCommentAsync(commentId, patchDocument);
+            var result = await _userService.BanUserAsync(userId);
 
-            _response.Result = patchDocument;
+            _response.Result = result;
             _response.IsSuccess = true;
             _response.StatusCode = Convert.ToInt32(HttpStatusCode.OK);
-            _response.Message = "Comment updated successfully";
+            _response.Message = "Request completed successfully";
 
             return StatusCode(_response.StatusCode, _response);
         }
 
-        [HttpDelete("{commentId:guid}")]
+        [HttpPatch("{userId:guid}/unban")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> DeleteComment([FromRoute] Guid commentId)
+        public async Task<IActionResult> UnbanUser([FromRoute] string userId)
         {
-            await _commentService.DeleteCommentAsync(commentId);
+            var result = await _userService.UnbanUserAsync(userId);
 
-            _response.Result = commentId;
+            _response.Result = result;
+            _response.IsSuccess = true;
+            _response.StatusCode = Convert.ToInt32(HttpStatusCode.OK);
+            _response.Message = "Request completed successfully";
+
+            return StatusCode(_response.StatusCode, _response);
+        }
+        [HttpPut("{userId:guid}")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpdateUser([FromRoute] string userId, [FromBody] UserForUpdatingDto userForUpdatingDto)
+        {
+            await _userService.UpdateUserAsync(userId, userForUpdatingDto);
+
+            _response.Result = userForUpdatingDto;
             _response.IsSuccess = true;
             _response.StatusCode = Convert.ToInt32(HttpStatusCode.OK);
             _response.Message = "Request completed successfully";
@@ -90,3 +104,4 @@ namespace DOITFinalProject_2.Controllers
         }
     }
 }
+

@@ -2,6 +2,7 @@
 using Domain.Entities.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace Infrastructure.Repository
@@ -28,7 +29,7 @@ namespace Infrastructure.Repository
             }
             else
             {
-                throw new ArgumentNullException("Unable to find user");
+                throw new KeyNotFoundException("Unable to find user");
             }
         }
 
@@ -50,6 +51,7 @@ namespace Infrastructure.Repository
         public async Task AddToRoleAsync(ApplicationUser user, string role)
         {
             await _userManager.AddToRoleAsync(user, role);
+            
         }
 
         public async Task<bool> RoleExistsAsync(string role)
@@ -88,6 +90,120 @@ namespace Infrastructure.Repository
             {
                 throw new UnauthorizedAccessException("Can't get credentials of unauthorized user");
             }
+        }
+
+        public async Task<ApplicationUser> GetUserByIdAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user != null)
+            {
+                return user;
+            }
+            else
+            {
+                throw new KeyNotFoundException("Unable to find user");
+            }
+        }
+
+        public async Task BanUserAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new KeyNotFoundException("User not found");
+            }
+
+            await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.MaxValue);
+
+        }
+
+        public async Task UnbanUserAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new KeyNotFoundException("User not found");
+            }
+
+            await _userManager.SetLockoutEndDateAsync(user, null);
+        }
+
+        public async Task<List<ApplicationUser>> GetAllAsync(string? includeProperties = null)
+        {
+            IQueryable<ApplicationUser> query = _userManager.Users;
+
+            if (includeProperties != null)
+            {
+                var properties = includeProperties.Split(',');
+
+                foreach (var property in properties)
+                {
+                    query = query.Include(property);
+                }
+            }
+
+            var users = await query.ToListAsync();
+            if (!users.Any())
+            {
+                throw new KeyNotFoundException("Users not found");
+            }
+            return users;
+        }
+
+        public async Task<ApplicationUser> GetUserByEmailAsync(string email, string? includeProperties = null)
+        {
+            var userQuery = _userManager.Users;
+
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                var properties = includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (var property in properties)
+                {
+                    userQuery = userQuery.Include(property);
+                }
+            }
+
+            var user = await userQuery.FirstOrDefaultAsync(u => u.Email == email);
+
+            if (user != null)
+            {
+                return user;
+            }
+            else
+            {
+                throw new KeyNotFoundException("Unable to find user");
+            }
+        }
+
+
+        public async Task<ApplicationUser> UpdateUserAsync(ApplicationUser user, string currentPassword, string newPassword)
+        {
+            var userFromDb = await _userManager.FindByIdAsync(user.Id);
+            if (userFromDb != null)
+            {
+                userFromDb.Email = user.Email;
+                userFromDb.DisplayName = user.DisplayName;
+                userFromDb.PhoneNumber = user.PhoneNumber;
+
+                if (userFromDb.PasswordHash == null)
+                {
+                    throw new Exception("No password hash found for the user");
+                }
+                var passwordVerificationResult = _userManager.PasswordHasher.VerifyHashedPassword(userFromDb, userFromDb.PasswordHash, currentPassword);
+                if (passwordVerificationResult == PasswordVerificationResult.Failed)
+                {
+                    throw new Exception("Current password is incorrect");
+                }
+                userFromDb.PasswordHash = _userManager.PasswordHasher.HashPassword(userFromDb, newPassword);
+            }
+            else
+            {
+                throw new KeyNotFoundException("User not found");
+            }
+
+            await _userManager.UpdateAsync(userFromDb);
+            return userFromDb;
         }
     }
 }

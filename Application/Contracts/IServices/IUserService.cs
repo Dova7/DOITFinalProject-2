@@ -1,6 +1,4 @@
 ﻿using Application.Models.Identity.Dtos;
-using Application.Models.Main.Dtos.Topic;
-using Microsoft.AspNetCore.JsonPatch;
 
 namespace Application.Contracts.IServices
 {
@@ -8,6 +6,8 @@ namespace Application.Contracts.IServices
     {
         Task<UserForGettingDto> GetUserAsync(string email);
         Task<List<UserForGettingDto>> GetAllUsersAsync();
-        Task UpdateUserAsync(Guid id, JsonPatchDocument<UserForUpdatingDto> patchDocument);
+        Task UpdateUserAsync(string userId, UserForUpdatingDto userForUpdatingDto);
+        Task<bool> BanUserAsync(string userId);
+        Task<bool> UnbanUserAsync(string userId);
     }
 }

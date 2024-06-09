@@ -8,7 +8,7 @@ using System.Net;
 
 namespace DOITFinalProject_2.Controllers
 {
-    [Route("api/Topics")]
+    [Route("api/topics")]
     [ApiController]
     public class TopicController : ControllerBase
     {

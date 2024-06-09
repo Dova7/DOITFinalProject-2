@@ -4,7 +4,6 @@ using Application.Models.Main.Dtos.Topic;
 using AutoMapper;
 using Domain.Entities.Identity;
 using ForumProject.Entities;
-using Microsoft.AspNetCore.Http;
 
 namespace Application.Service.Mapper
 {
@@ -12,14 +11,37 @@ namespace Application.Service.Mapper
     {
         public MappingProfile()
         {
-            
+
         }
 
         public static IMapper InitializeUser()
         {
             MapperConfiguration configuration = new(config =>
             {
-                config.CreateMap<UserForGettingDto, ApplicationUser>().ReverseMap();
+                config.CreateMap<UserForGettingDto, ApplicationUser>().ReverseMap()
+                .ForMember(d => d.Comments, o => o.MapFrom(s => s.Comments))
+                .ForMember(d => d.Topics, o => o.MapFrom(s => s.Topics))
+                .ReverseMap();
+
+                config.CreateMap<Topic, TopicForGettingDto>();
+                config.CreateMap<Comment, CommentForGettingDtoMain>();
+
+                config.CreateMap<Topic, TopicForGettingDto>()
+                .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
+                .ForMember(d => d.Title, o => o.MapFrom(s => s.Title))
+                .ForMember(d => d.Body, o => o.MapFrom(s => s.Body))
+                .ForMember(d => d.PostDate, o => o.MapFrom(s => s.PostDate))
+                .ForMember(d => d.Status, o => o.MapFrom(s => s.Status))
+                .ForMember(d => d.UserName, o => o.MapFrom(s => s.ApplicationUser.UserName))
+                .ForMember(d => d.Comments, o => o.MapFrom(s => s.Comments))
+                .ReverseMap();
+
+                config.CreateMap<Comment, CommentForGettingDtoTopic>()
+                .ForMember(d => d.Body, o => o.MapFrom(s => s.Body))
+                .ForMember(d => d.PostDate, o => o.MapFrom(s => s.PostDate))
+                .ForMember(d => d.UserName, o => o.MapFrom(s => s.ApplicationUser.UserName))
+                .ReverseMap();
+
                 config.CreateMap<UserForUpdatingDto, ApplicationUser>().ReverseMap();
                 config.CreateMap<RegistrationRequestDto, ApplicationUser>()
                 .ForMember(destination => destination.DisplayName, options => options.MapFrom(source => source.DisplayName))
@@ -81,8 +103,8 @@ namespace Application.Service.Mapper
                 .ForMember(d => d.TopicTitle, o => o.MapFrom(s => s.Topic.Title))
                 .ReverseMap();
 
-                config.CreateMap<Comment, CommentForCreatingDto>()                
-                .ForMember(d => d.Body, o => o.MapFrom(s => s.Body))                
+                config.CreateMap<Comment, CommentForCreatingDto>()
+                .ForMember(d => d.Body, o => o.MapFrom(s => s.Body))
                 .ReverseMap();
 
                 config.CreateMap<Comment, CommentForUpdatingDto>()

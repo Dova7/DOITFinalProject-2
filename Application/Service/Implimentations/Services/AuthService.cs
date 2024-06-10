@@ -75,11 +75,11 @@ namespace Application.Service.Implimentations.Services
                     var error = result.Errors.FirstOrDefault();
                     if (error != null)
                     {
-                        throw new RegistrationFailure(error.Description);
+                        throw new RegistrationFailureException(error.Description);
                     }
                     else
                     {
-                        throw new RegistrationFailure("An unknown error occurred.");
+                        throw new RegistrationFailureException("An unknown error occurred.");
                     }
                 }
             }
@@ -116,11 +116,11 @@ namespace Application.Service.Implimentations.Services
                     var error = result.Errors.FirstOrDefault();
                     if (error != null)
                     {
-                        throw new RegistrationFailure(error.Description);
+                        throw new RegistrationFailureException(error.Description);
                     }
                     else
                     {
-                        throw new RegistrationFailure("An unknown error occurred.");
+                        throw new RegistrationFailureException("An unknown error occurred.");
                     }
                 }
 

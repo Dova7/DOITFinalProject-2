@@ -28,6 +28,7 @@ namespace DOITFinalProject_2
                 app.UseSwaggerUI();
             }
 
+            app.UseMiddleware<ExceptionHandler>();
             app.UseHttpsRedirection();
             app.UseCors(builder.Configuration.GetValue<string>("Cors:AllowOrigin")!);
             app.UseAuthentication();

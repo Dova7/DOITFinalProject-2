@@ -1,14 +1,13 @@
 ﻿using Domain.Constants.Enums;
 using Domain.Entities;
 using Domain.Entities.Identity;
-using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ForumProject.Entities
 {
     public class Topic : BaseEntity
-    {        
+    {
         [Required]
         [MaxLength(50)]
         public string Title { get; set; } = null!;

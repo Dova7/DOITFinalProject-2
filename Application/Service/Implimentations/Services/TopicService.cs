@@ -5,6 +5,7 @@ using Application.Service.Mapper;
 using AutoMapper;
 using ForumProject.Entities;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Service.Implimentations.Services
 {
@@ -38,6 +39,25 @@ namespace Application.Service.Implimentations.Services
             result.UserId = userId;
             await _topicRepository.AddAsync(result);
             await _topicRepository.Save();
+        }
+
+        public async Task DeactivateInactiveTopicsAsync()
+        {
+            var inactiveThreshold = DateTime.UtcNow.AddDays(-30);
+
+            var topics = await _topicRepository.GetAllAsync(includePropeties: "Comments");
+
+            foreach (var topic in topics)
+            {
+                var lastCommented = topic.Comments?.OrderByDescending(c => c.PostDate).FirstOrDefault()?.PostDate ?? topic.PostDate;
+                if (lastCommented <= inactiveThreshold)
+                {
+                    topic.Status = false;
+                }
+            }
+            await _topicRepository.Save();
+
+
         }
 
         public async Task DeleteTopicAsync(Guid id)

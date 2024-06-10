@@ -1,4 +1,6 @@
+using Application.Service.Implimentations.Services;
 using DOITFinalProject_2.MiddleWare;
+using Hangfire;
 
 namespace DOITFinalProject_2
 {
@@ -19,6 +21,7 @@ namespace DOITFinalProject_2
             builder.AddSwagger();
             builder.AddCors();
             builder.AddScopedServices();
+            builder.AddHangfire();
 
             var app = builder.Build();
 
@@ -33,8 +36,11 @@ namespace DOITFinalProject_2
             app.UseCors(builder.Configuration.GetValue<string>("Cors:AllowOrigin")!);
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseHangfireDashboard();
             app.MapControllers();
             app.Run();
+
+            RecurringJob.AddOrUpdate<TopicService>(x => x.DeactivateInactiveTopicsAsync(), Cron.Daily);
         }
     }
 }

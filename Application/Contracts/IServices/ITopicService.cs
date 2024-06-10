@@ -11,5 +11,6 @@ namespace Application.Contracts.IServices
         Task UpdateTopicAsyncUser(Guid id, JsonPatchDocument<TopicForUpdatingDtoUser> patchDocument);
         Task UpdateTopicAsyncAdmin(Guid id, JsonPatchDocument<TopicForUpdatingDtoAdmin> patchDocument);
         Task DeleteTopicAsync(Guid id);
+        Task DeactivateInactiveTopicsAsync();
     }
 }

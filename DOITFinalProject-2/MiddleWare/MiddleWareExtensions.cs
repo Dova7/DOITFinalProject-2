@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Mvc;
 using Domain.Entities.Identity;
 using DOITFinalProject_2.MiddleWare;
 using DOITFinalProject_2.Filters;
+using Hangfire;
 
 namespace DOITFinalProject_2.MiddleWare
 {
@@ -129,6 +130,11 @@ namespace DOITFinalProject_2.MiddleWare
             builder.Services.AddScoped<ITopicService, TopicService>();
             builder.Services.AddScoped<ICommentService, CommentService>();
             builder.Services.AddScoped<IUserService, UserService>();   
+        }
+        public static void AddHangfire(this WebApplicationBuilder builder)
+        {
+            builder.Services.AddHangfire(config => config
+                .UseSqlServerStorage(builder.Configuration.GetConnectionString("SQLServerLocalConnection")));
         }
     }
 }

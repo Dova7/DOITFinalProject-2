@@ -31,16 +31,21 @@ namespace DOITFinalProject_2
                 app.UseSwaggerUI();
             }
 
+
             app.UseMiddleware<ExceptionHandler>();
             app.UseHttpsRedirection();
             app.UseCors(builder.Configuration.GetValue<string>("Cors:AllowOrigin")!);
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseHangfireDashboard();
-            app.MapControllers();
-            app.Run();
 
-            RecurringJob.AddOrUpdate<TopicService>(x => x.DeactivateInactiveTopicsAsync(), Cron.Daily);
+            RecurringJob.AddOrUpdate<TopicService>("DeactivateInactiveTopicsJob", x => x.DeactivateInactiveTopicsAsync(), Cron.Daily, new RecurringJobOptions()
+            {
+                TimeZone = TimeZoneInfo.Local
+            });
+
+            app.MapControllers();
+            app.Run();                        
         }
     }
 }

@@ -5,7 +5,6 @@ using Application.Service.Mapper;
 using AutoMapper;
 using ForumProject.Entities;
 using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Service.Implimentations.Services
 {

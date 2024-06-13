@@ -134,7 +134,8 @@ namespace DOITFinalProject_2.MiddleWare
         public static void AddHangfire(this WebApplicationBuilder builder)
         {
             builder.Services.AddHangfire(config => config
-                .UseSqlServerStorage(builder.Configuration.GetConnectionString("SQLServerLocalConnection")));
+                .UseSqlServerStorage(builder.Configuration.GetConnectionString("SQLServerLocalConnection")));                
+            builder.Services.AddHangfireServer();
         }
     }
 }

@@ -38,7 +38,7 @@ namespace Application.Service.Implimentations.Services
             var roles = await _userRepository.GetRolesAsync(user);
             var token = _jwtTokenGenerator.GenerateToken(user, roles);
 
-            var userDto = _mapper.Map<UserForGettingDto>(user);
+            var userDto = _mapper.Map<UserForGettingDtoLogin>(user);
 
             LoginResponseDto result = new()
             {
@@ -62,7 +62,7 @@ namespace Application.Service.Implimentations.Services
 
                     if (userToReturn != null)
                     {
-                        if (!await _userRepository.RoleExistsAsync(_userRole))
+                        if (await _userRepository.RoleExistsAsync(_userRole))
                         {
                             await _userRepository.AddToRoleAsync(userToReturn, _userRole);
                         }
@@ -103,7 +103,7 @@ namespace Application.Service.Implimentations.Services
 
                     if (userToReturn != null)
                     {
-                        if (!await _userRepository.RoleExistsAsync(_adminRole))
+                        if (await _userRepository.RoleExistsAsync(_adminRole))
                         {
                             await _userRepository.AddToRoleAsync(userToReturn, _adminRole);
                         }

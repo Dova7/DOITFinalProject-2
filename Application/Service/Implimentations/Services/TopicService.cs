@@ -1,6 +1,7 @@
 ﻿using Application.Contracts.IRepositories;
 using Application.Contracts.IServices;
 using Application.Models.Main.Dtos.Topic;
+using Application.Service.Exceptions;
 using Application.Service.Mapper;
 using AutoMapper;
 using ForumProject.Entities;
@@ -65,19 +66,20 @@ namespace Application.Service.Implimentations.Services
             {
                 throw new ArgumentException("Invalid argument passed");
             }
-            var raw = await _topicRepository.GetAsync(x => x.Id == id, includePropeties: "Comments");
+            var raw = await _topicRepository.GetAsync(x => x.Id == id, includePropeties: "Comments,ApplicationUser");
             if (raw == null)
             {
-                throw new ArgumentNullException("Topic does not exist");
+                throw new TopicNotFoundException("Topic not Found");
             }
             var userId = _userRepository.AuthenticatedUserId();
+            var userRole = _userRepository.AuthenticatedUserRole().Trim();
             if (userId is null)
             {
                 throw new UnauthorizedAccessException("Must be logged in to update state of topic");
             }
-            if (raw.UserId.Trim() != userId && _userRepository.AuthenticatedUserRole().Trim() != "Admin")
+            if (raw.UserId.Trim() != userId && userRole != "Admin")
             {
-                throw new UnauthorizedAccessException("Can't delete different users topic");
+                throw new InvalidUserException("Can't delete different users topic");
             }
             else
             {
@@ -91,18 +93,23 @@ namespace Application.Service.Implimentations.Services
             }
         }
 
-        public async Task<List<TopicForGettingDto>> GetAllTopicsAsync()
+        public async Task<List<TopicForGettingDtoAll>> GetAllTopicsAsync()
         {
             var raw = await _topicRepository.GetAllAsync(includePropeties: "Comments,ApplicationUser");
             if (raw.Count == 0)
             {
-                throw new ArgumentNullException("Topics not found");
+                throw new TopicNotFoundException("Topics not Found");
             }
-            var topics = _mapper.Map<List<TopicForGettingDto>>(raw);
+            var filteredRaw = raw.Where(t => t.State == Domain.Constants.Enums.State.Show).ToList();
+            if (filteredRaw.Count == 0)
+            {
+                throw new TopicNotFoundException("Topics with show state not Found");
+            }
+            var topics = _mapper.Map<List<TopicForGettingDtoAll>>(filteredRaw);
             return topics;
         }
 
-        public async Task<List<TopicForGettingDto>> GetAllTopicsOfUserAsync(string userId)
+        public async Task<List<TopicForGettingDtoAll>> GetAllTopicsOfUserAsync(string userId)
         {
             if (string.IsNullOrWhiteSpace(userId))
             {
@@ -112,10 +119,30 @@ namespace Application.Service.Implimentations.Services
             var raw = await _topicRepository.GetAllAsync(x => x.UserId.Trim() == userId.Trim(), includePropeties: "Comments,ApplicationUser");
             if (raw.Count == 0)
             {
-                throw new ArgumentNullException("Topics not found");
+                throw new TopicNotFoundException("Topics not Found");
             }
-            var topics = _mapper.Map<List<TopicForGettingDto>>(raw);
+            var filteredRaw = raw.Where(t => t.State == Domain.Constants.Enums.State.Show).ToList();
+            if (filteredRaw.Count == 0)
+            {
+                throw new TopicNotFoundException("Topics with show state not Found");
+            }
+            var topics = _mapper.Map<List<TopicForGettingDtoAll>>(filteredRaw);
             return topics;
+        }
+
+        public async Task<TopicForGettingDto> GetSingleTopicAsync(Guid id)
+        {
+            var raw = await _topicRepository.GetAsync(x => x.Id == id, includePropeties: "Comments.ApplicationUser,ApplicationUser");
+            if (raw is null)
+            {
+                throw new TopicNotFoundException("Topic not Found");
+            }
+            if (raw.State != Domain.Constants.Enums.State.Show)
+            {
+                throw new TopicNotFoundException("Topic is Hidden");
+            }
+            var topic = _mapper.Map<TopicForGettingDto>(raw);
+            return topic;
         }
 
         public async Task UpdateTopicAsyncAdmin(Guid id, JsonPatchDocument<TopicForUpdatingDtoAdmin> patchDocument)
@@ -137,8 +164,8 @@ namespace Application.Service.Implimentations.Services
             var topicFromDb = await _topicRepository.GetAsync(x => x.Id == id);
             if (topicFromDb is null)
             {
-                throw new ArgumentNullException("Topic does not exist");
-            }
+                throw new TopicNotFoundException("Topic not Found");
+            }            
             var topicToPatch = _mapper.Map<TopicForUpdatingDtoAdmin>(topicFromDb);
             patchDocument.ApplyTo(topicToPatch);
             _mapper.Map(topicToPatch, topicFromDb);
@@ -146,11 +173,17 @@ namespace Application.Service.Implimentations.Services
             await _topicRepository.Save();
         }
 
-        public async Task UpdateTopicAsyncUser(Guid id, JsonPatchDocument<TopicForUpdatingDtoUser> patchDocument)
+        public async Task UpdateTopicAsyncState(Guid id, JsonPatchDocument<TopicForUpdatingDtoState> patchDocument)
         {
             if (patchDocument is null)
             {
                 throw new ArgumentNullException("Invalid argument passed");
+            }
+            byte show = 2;
+            byte hide = 3;
+            if (patchDocument.Operations.Any(op => op.value.ToString() != show.ToString() && op.value.ToString() != hide.ToString()))
+            {
+                throw new InvalidStateException();
             }
             var userId = _userRepository.AuthenticatedUserId();
             if (userId is null)
@@ -160,16 +193,50 @@ namespace Application.Service.Implimentations.Services
             var topicFromDb = await _topicRepository.GetAsync(x => x.Id == id);
             if (topicFromDb is null)
             {
-                throw new ArgumentNullException("Topic does not exist");
+                throw new TopicNotFoundException("Topic not Found");
+            }
+            if (topicFromDb.Status == false)
+            {
+                throw new TopicIsInactiveException();
             }
             if (topicFromDb.UserId != userId)
             {
-                throw new UnauthorizedAccessException("Can't update another users topic");
+                throw new InvalidUserException("Can't update another users topic");
             }
-            var topicToPatch = _mapper.Map<TopicForUpdatingDtoUser>(topicFromDb);
+            var topicToPatch = _mapper.Map<TopicForUpdatingDtoState>(topicFromDb);
             patchDocument.ApplyTo(topicToPatch);
             _mapper.Map(topicToPatch, topicFromDb);
 
+            await _topicRepository.Save();
+        }
+
+        public async Task UpdateTopicAsyncUser(Guid id, TopicForUpdatingDtoUser topicForUpdatingDtoUser)
+        {
+            if (topicForUpdatingDtoUser is null)
+            {
+                throw new ArgumentNullException("Invalid argument passed");
+            }
+            var authenticatedId = _userRepository.AuthenticatedUserId();
+            if (authenticatedId is null)
+            {
+                throw new UnauthorizedAccessException("Must be logged in to update Topic");
+            }
+            var topicFromDb = await _topicRepository.GetAsync(x => x.Id == id);
+            if (topicFromDb is null)
+            {
+                throw new TopicNotFoundException("Topic not Found");
+            }
+            if (topicFromDb.Status == false)
+            {
+                throw new TopicIsInactiveException();
+            }
+            if (topicFromDb.UserId != authenticatedId)
+            {
+                throw new UnauthorizedAccessException("Can't update another users topic");
+            }
+            var updatedTopic = _mapper.Map<Topic>(topicForUpdatingDtoUser);
+            updatedTopic.Id = id;
+            await _topicRepository.Update(updatedTopic);
             await _topicRepository.Save();
         }
     }

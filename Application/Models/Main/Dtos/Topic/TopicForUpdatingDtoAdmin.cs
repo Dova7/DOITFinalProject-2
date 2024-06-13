@@ -1,11 +1,10 @@
-﻿using Domain.Constants.Enums;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Application.Models.Main.Dtos.Topic
 {
     public class TopicForUpdatingDtoAdmin
     {
         [Required]
-        public State State { get; set; }
+        public bool Status { get; set; }
     }
 }

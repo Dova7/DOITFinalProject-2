@@ -9,5 +9,6 @@ namespace Application.Contracts.IServices
         Task UpdateUserAsync(string userId, UserForUpdatingDto userForUpdatingDto);
         Task<bool> BanUserAsync(string userId);
         Task<bool> UnbanUserAsync(string userId);
+        Task DeleteUserAsync(string userId);
     }
 }

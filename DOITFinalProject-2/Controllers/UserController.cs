@@ -102,6 +102,23 @@ namespace DOITFinalProject_2.Controllers
 
             return StatusCode(_response.StatusCode, _response);
         }
+
+        [HttpDelete("{userId:guid}")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> DeleteTopic([FromRoute] string userId)
+        {
+            await _userService.DeleteUserAsync(userId);
+
+            _response.Result = userId;
+            _response.IsSuccess = true;
+            _response.StatusCode = Convert.ToInt32(HttpStatusCode.OK);
+            _response.Message = "Request completed successfully";
+
+            return StatusCode(_response.StatusCode, _response);
+        }
     }
 }
 

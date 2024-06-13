@@ -18,6 +18,7 @@ namespace Application.Contracts.IRepositories
         Task<IdentityResult> CreateAsync(ApplicationUser user, string password);
         Task AddToRoleAsync(ApplicationUser user, string role);
         Task<bool> RoleExistsAsync(string role);
+        Task DeleteUserAsync(ApplicationUser user);    
         string AuthenticatedUserId();
         string AuthenticatedUserRole();
     }

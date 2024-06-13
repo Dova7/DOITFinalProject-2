@@ -1,4 +1,5 @@
 ﻿using Application.Contracts.IRepositories;
+using Application.Service.Exceptions;
 using Domain.Entities.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -30,7 +31,7 @@ namespace Infrastructure.Repository
             else
             {
                 throw new KeyNotFoundException("Unable to find user");
-            }
+            }            
         }
 
         public async Task<bool> CheckPasswordAsync(ApplicationUser user, string password)
@@ -110,7 +111,7 @@ namespace Infrastructure.Repository
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                throw new KeyNotFoundException("User not found");
+                throw new UserNotFoundException();
             }
 
             await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.MaxValue);
@@ -122,7 +123,7 @@ namespace Infrastructure.Repository
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                throw new KeyNotFoundException("User not found");
+                throw new UserNotFoundException();
             }
 
             await _userManager.SetLockoutEndDateAsync(user, null);
@@ -145,7 +146,7 @@ namespace Infrastructure.Repository
             var users = await query.ToListAsync();
             if (!users.Any())
             {
-                throw new KeyNotFoundException("Users not found");
+                throw new UserNotFoundException();
             }
             return users;
         }
@@ -199,11 +200,20 @@ namespace Infrastructure.Repository
             }
             else
             {
-                throw new KeyNotFoundException("User not found");
+                throw new UserNotFoundException();
             }
 
             await _userManager.UpdateAsync(userFromDb);
             return userFromDb;
+        }
+
+        public async Task DeleteUserAsync(ApplicationUser user)
+        {
+            if (user == null)
+            {
+                throw new UserNotFoundException();
+            }
+            await _userManager.DeleteAsync(user);
         }
     }
 }

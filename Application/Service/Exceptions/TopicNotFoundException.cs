@@ -2,7 +2,7 @@
 {
     public class TopicNotFoundException : Exception
     {
-        public TopicNotFoundException() : base("Topic not found")
+        public TopicNotFoundException(string msg) : base(msg)
         {
 
         }

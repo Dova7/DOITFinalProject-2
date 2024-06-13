@@ -1,6 +1,7 @@
 ﻿using Application.Contracts.IRepositories;
 using Application.Contracts.IServices;
 using Application.Models.Identity.Dtos;
+using Application.Service.Exceptions;
 using Application.Service.Mapper;
 using AutoMapper;
 using Domain.Entities.Identity;
@@ -39,12 +40,38 @@ namespace Application.Service.Implimentations.Services
             }
         }
 
+        public async Task DeleteUserAsync(string userId)
+        {
+            if (userId is null)
+            {
+                throw new ArgumentNullException("Invalid argument passed");
+            }
+            var userFromDb = await _userRepository.GetUserByIdAsync(userId);
+            if (userFromDb == null)
+            {
+                throw new UserNotFoundException();
+            }
+            var authenticatedId = _userRepository.AuthenticatedUserId();
+            if (authenticatedId is null)
+            {
+                throw new UnauthorizedAccessException("Must be logged in to delete account");
+            }
+            if (userFromDb.Id != authenticatedId)
+            {
+                throw new InvalidUserException("Can't delete another user's account");
+            }
+            else
+            {
+                await _userRepository.DeleteUserAsync(userFromDb);
+            }
+        }
+
         public async Task<List<UserForGettingDto>> GetAllUsersAsync()
         {
             var raw = await _userRepository.GetAllAsync(includePropeties: "Comments,Topics");
             if (raw.Count == 0)
             {
-                throw new ArgumentNullException("Users not found");
+                throw new UserNotFoundException();
             }
             var users = _mapper.Map<List<UserForGettingDto>>(raw);
             return users;
@@ -55,7 +82,7 @@ namespace Application.Service.Implimentations.Services
             var raw = await _userRepository.GetUserByEmailAsync(email,includePropeties: "Comments,Topics");
             if (raw == null)
             {
-                throw new KeyNotFoundException("Users not found");
+                throw new UserNotFoundException();
             }
             var user = _mapper.Map<UserForGettingDto>(raw);
             return user;
@@ -85,6 +112,10 @@ namespace Application.Service.Implimentations.Services
 
         public async Task UpdateUserAsync(string userId, UserForUpdatingDto userForUpdatingDto)
         {
+            if (userId is null)
+            {
+                throw new ArgumentNullException("Invalid argument passed");
+            }
             if (userForUpdatingDto is null)
             {
                 throw new ArgumentNullException("Invalid argument passed");
@@ -97,11 +128,11 @@ namespace Application.Service.Implimentations.Services
             var userFromDb = await _userRepository.GetUserByIdAsync(userId);
             if (userFromDb is null)
             {
-                throw new ArgumentNullException("User does not exist");
+                throw new UserNotFoundException();
             }
-            if (userFromDb.Id != userId)
+            if (authenticatedId != userId)
             {
-                throw new UnauthorizedAccessException("Can't update another users topic");
+                throw new InvalidUserException("Can't update another users credentials");
             }
             var updatedUser = _mapper.Map<ApplicationUser>(userForUpdatingDto);
             updatedUser.Id = userId;

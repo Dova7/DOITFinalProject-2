@@ -1,6 +1,6 @@
 ﻿using Application.Service.Exceptions;
 using DOITFinalProject_2.Responses;
-using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Net;
 
 namespace DOITFinalProject_2.MiddleWare
@@ -54,10 +54,24 @@ namespace DOITFinalProject_2.MiddleWare
                     response.Result = null!;
                     break;
                 case
-                    RegistrationFailureException registrationNotFoundException:
+                    RegistrationFailureException registrationFailureException:
                     response.StatusCode = Convert.ToInt32(HttpStatusCode.InternalServerError);
                     response.IsSuccess = false;
-                    response.Message = registrationNotFoundException.Message;
+                    response.Message = registrationFailureException.Message;
+                    response.Result = null!;
+                    break;
+                case
+                    TopicIsInactiveException topicIsInactiveException:
+                    response.StatusCode = Convert.ToInt32(HttpStatusCode.Forbidden);
+                    response.IsSuccess = false;
+                    response.Message = topicIsInactiveException.Message;
+                    response.Result = null!;
+                    break;
+                case
+                    InvalidUserException invalidNotFoundException:
+                    response.StatusCode = Convert.ToInt32(HttpStatusCode.Forbidden);
+                    response.IsSuccess = false;
+                    response.Message = invalidNotFoundException.Message;
                     response.Result = null!;
                     break;
                 case
@@ -87,7 +101,7 @@ namespace DOITFinalProject_2.MiddleWare
                     response.IsSuccess = false;
                     response.Message = unauthorizedAccessException.Message;
                     response.Result = null!;
-                    break;
+                    break;                
                 case
                     Exception exception:
                     response.StatusCode = Convert.ToInt32(HttpStatusCode.InternalServerError);

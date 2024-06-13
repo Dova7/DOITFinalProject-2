@@ -1,8 +1,6 @@
-﻿using Application.Models.Main.Dtos.Comment;
-
-namespace Application.Models.Main.Dtos.Topic
+﻿namespace Application.Models.Main.Dtos.Topic
 {
-    public class TopicForGettingDto
+    public class TopicForGettingDtoAll
     {
         public Guid Id { get; set; }
         public string Title { get; set; } = null!;
@@ -10,6 +8,6 @@ namespace Application.Models.Main.Dtos.Topic
         public DateTime PostDate { get; set; }
         public bool Status { get; set; }
         public string DisplayName { get; set; } = null!;
-        public ICollection<CommentForGettingDtoTopic>? Comments { get; set; }
+        public int CommentCount { get; set; }
     }
 }

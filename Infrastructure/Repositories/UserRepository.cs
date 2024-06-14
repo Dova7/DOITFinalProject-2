@@ -203,7 +203,12 @@ namespace Infrastructure.Repository
                 throw new UserNotFoundException();
             }
 
-            await _userManager.UpdateAsync(userFromDb);
+            var result = await _userManager.UpdateAsync(userFromDb);
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                throw new InvalidOperationException($"Failed to update user: {errors}");
+            }
             return userFromDb;
         }
 
